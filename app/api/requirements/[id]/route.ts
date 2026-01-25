@@ -1,18 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/config/database";
-import UserRequirement from "@/models/UserRequirement";
-import { getUserFromRequest } from "@/lib/auth/getUser";
+import UserRequirement from "@/models/Userrequirement";
+import { auth } from "@/lib/middlewares/auth";
 
-export async function PUT(
+export const PUT = auth(async (
   req: NextRequest,
   { params }: { params: { id: string } }
-) {
+) => {
   try {
     await dbConnect();
-    const user = await getUserFromRequest(req);
+    const userId = (req as any).user.id;
 
     const updated = await UserRequirement.findOneAndUpdate(
-      { _id: params.id, user: user._id },
+      { _id: params.id, user: userId },
       { status: "closed" },
       { new: true }
     );
@@ -24,4 +24,4 @@ export async function PUT(
       { status: 500 }
     );
   }
-}
+});
