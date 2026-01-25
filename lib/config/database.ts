@@ -36,7 +36,8 @@ export default async function dbConnect() {
     })
     .then(async (mongooseInstance) => {
       console.log("✅ MongoDB connected successfully");
-      console.log(`📊 Database: ${mongooseInstance.connection.db.databaseName}`);
+      const dbName = mongooseInstance.connection.db?.databaseName ?? "(unknown)";
+      console.log(`📊 Database: ${dbName}`);
       
       // Initialize collections on first connection
       if (!isInitialized) {

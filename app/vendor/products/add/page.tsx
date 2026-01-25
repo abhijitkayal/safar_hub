@@ -80,7 +80,7 @@ export default function SellerAddProductPage() {
   const calculateCommission = (
   type: "buy" | "rent",
   price: number
-) => {
+): { rate: number; amount: number } => {
   if (!price || price <= 0) {
     return { rate: 0, amount: 0 };
   }
@@ -219,6 +219,7 @@ export default function SellerAddProductPage() {
   //   rate,
   //   amount: Number(((price * rate) / 100).toFixed(2)),
   // };
+  return { rate: 0, amount: 0 };
 };
 
   const fetchCategories = async () => {

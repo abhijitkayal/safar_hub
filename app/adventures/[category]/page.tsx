@@ -1,10 +1,11 @@
 import AdventuresExplorer from "../AdventuresExplorer";
 import { ADVENTURE_CATEGORIES } from "../categories";
+import type { AdventureCategoryValue } from "../categories";
 import { notFound } from "next/navigation";
 
-type PageProps = {
+type CategoryPageProps = {
   params: Promise<{
-    category: string;
+    category: AdventureCategoryValue;
   }>;
 };
 
@@ -18,7 +19,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function AdventureCategoryPage({ params }: PageProps) {
+export default async function AdventureCategoryPage({ params }: CategoryPageProps) {
   const { category } = await params;
 
   // If it looks like a MongoDB ID (24 hex chars), this route shouldn't match

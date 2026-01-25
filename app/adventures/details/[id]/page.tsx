@@ -22,9 +22,10 @@ async function getAdventure(id: string) {
 export default async function AdventureDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const adventure = await getAdventure(params.id);
+  const { id } = await params;
+  const adventure = await getAdventure(id);
 
   if (!adventure) {
     notFound();

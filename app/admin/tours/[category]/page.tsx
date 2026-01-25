@@ -1,16 +1,28 @@
+import { notFound } from "next/navigation";
 import ToursExplorer from "../../../tours/ToursExplorer";
 import { TOUR_CATEGORIES } from "../../../tours/categories";
 
-const VALID_CATEGORIES = TOUR_CATEGORIES.map((tab) => tab.value);
+type AdminToursCategoryPageProps = {
+  params: Promise<{ category: string }>;
+};
 
-export default function ToursCategoryPage({
-  params,
-}: {
-  params: { category: string };
-}) {
-  const category = VALID_CATEGORIES.includes(params.category)
-    ? params.category
-    : "all";
+// Generate static params for all valid categories
+export async function generateStaticParams() {
+  return TOUR_CATEGORIES.map((cat) => ({
+    category: cat.value,
+  }));
+}
+
+export default async function ToursCategoryPage({ params }: AdminToursCategoryPageProps) {
+  const { category } = await params;
+
+  // Validate category
+  const isValidCategory = TOUR_CATEGORIES.map((c) => c.value).includes(category as any);
+
+  const isMongoId = /^[0-9a-fA-F]{24}$/.test(category);
+  if (isMongoId || !isValidCategory) {
+    notFound();
+  }
 
   return <ToursExplorer initialCategory={category} />;
 }
