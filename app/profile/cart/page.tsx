@@ -15,11 +15,11 @@ export default function CartPage() {
   const getServiceDetailPath = (itemType: string, itemId: string) => {
     switch (itemType) {
       case "Stay":
-        return `/stays/${itemId}`;
+        return `/stays/details/${itemId}`;
       case "Tour":
-        return `/tours/${itemId}`;
+        return `/tours/details/${itemId}`;
       case "Adventure":
-        return `/adventures/${itemId}`;
+        return `/adventures/details/${itemId}`;
       case "VehicleRental":
         return `/vehicle-rental/${itemId}`;
       default:

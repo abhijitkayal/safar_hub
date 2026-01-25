@@ -118,7 +118,7 @@ export const TourCard = ({
 
   return (
     <Link
-      href={`/tours/${tour._id}`}
+      href={`/tours/details/${tour._id}`}
       className="group flex flex-col overflow-hidden rounded-3xl border border-white/40 bg-white/95 shadow-xl backdrop-blur-sm transition hover:-translate-y-2 hover:shadow-2xl"
     >
       <div className="relative h-56 w-full">
@@ -330,11 +330,10 @@ export default function ToursExplorer({ initialCategory = "all" }: ToursExplorer
       setLoading(true);
       setError(null);
       try {
-        const url = new URL("/api/tours", window.location.origin);
-        const categoryParam = normalizedInitialCategory !== "all" ? normalizedInitialCategory : undefined;
+        const category = normalizedInitialCategory || "all";
+        const url = new URL(`/api/tours/${category}`, window.location.origin);
         const cityParam = params.get("city") || undefined;
         const guestsParam = params.get("guests") || undefined;
-        if (categoryParam) url.searchParams.set("category", categoryParam);
         if (cityParam) url.searchParams.set("city", cityParam);
         if (guestsParam) url.searchParams.set("guests", guestsParam);
         const res = await fetch(url.toString(), { cache: "no-store" });
@@ -464,13 +463,10 @@ export default function ToursExplorer({ initialCategory = "all" }: ToursExplorer
     (value: CategoryValue) => {
       setActiveCategory(value);
       const nextSearch = new URLSearchParams(params.toString());
-      if (value === "all") {
-        nextSearch.delete("category");
-      } else {
-        nextSearch.set("category", value);
-      }
+      nextSearch.delete("category");
       const queryString = nextSearch.toString();
-      router.replace(queryString ? `/tours?${queryString}` : "/tours", { scroll: false });
+      const basePath = `/tours/${value}`;
+      router.replace(queryString ? `${basePath}?${queryString}` : basePath, { scroll: false });
     },
     [params, router]
   );
@@ -588,15 +584,14 @@ export default function ToursExplorer({ initialCategory = "all" }: ToursExplorer
                 className="rounded-lg bg-green-600 px-5 py-2 text-sm font-semibold text-white hover:bg-green-700"
                 type="button"
                 onClick={() => {
-                  const url = new URL("/tours", window.location.origin);
-                  if (searchTerm) url.searchParams.set("city", searchTerm);
-                  if (guests) url.searchParams.set("guests", String(guests));
-                  if (checkIn) url.searchParams.set("startDate", checkIn);
-                  if (checkOut) url.searchParams.set("endDate", checkOut);
-                  if (activeCategory && activeCategory !== "all") {
-                    url.searchParams.set("category", activeCategory);
-                  }
-                  router.push(`${url.pathname}?${url.searchParams.toString()}`);
+                  const basePath = `/tours/${activeCategory}`;
+                  const searchParams = new URLSearchParams();
+                  if (searchTerm) searchParams.set("city", searchTerm);
+                  if (guests) searchParams.set("guests", String(guests));
+                  if (checkIn) searchParams.set("startDate", checkIn);
+                  if (checkOut) searchParams.set("endDate", checkOut);
+                  const queryString = searchParams.toString();
+                  router.push(queryString ? `${basePath}?${queryString}` : basePath);
                 }}
               >
                 Search

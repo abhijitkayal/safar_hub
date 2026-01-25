@@ -225,7 +225,7 @@ export default function VendorStaysPage() {
 
           <div className="mt-4 flex gap-2">
             <button
-              onClick={() => navigate ? navigate(`/stays/${stay._id}`) : router.push(`/stays/${stay._id}`)}
+              onClick={() => navigate ? navigate(`/stays/details/${stay._id}`) : router.push(`/stays/details/${stay._id}`)}
               className="flex-1 rounded-lg bg-blue-500 px-3 py-2 text-sm font-medium text-white hover:bg-blue-600 flex items-center justify-center gap-1"
             >
               <FaEye /> View

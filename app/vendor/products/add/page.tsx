@@ -43,6 +43,8 @@ export default function SellerAddProductPage() {
     tags: [] as string[],
     listingType: "buy" as "buy" | "rent",
     rentPriceDay: 0,
+      commissionAmount: 0,
+  commissionRate: 0,
   });
 
   const [bulkColor, setBulkColor] = useState("");
@@ -75,6 +77,150 @@ export default function SellerAddProductPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
+  const calculateCommission = (
+  type: "buy" | "rent",
+  price: number
+) => {
+  if (!price || price <= 0) {
+    return { rate: 0, amount: 0 };
+  }
+
+  if (type === "buy") {
+    // console.log(formData.category);
+    // const rate = 10; 
+    if(formData.category=="Hostels" || formData.category=="bnb" ||formData.category=="resorts" ||formData.category=="Home-stays"){
+    if(price>=500 && price<2000){
+      const rate=12;
+      console.log(categories[0].slug);
+      return {
+      rate,
+      amount: Number(((price * rate) / 100).toFixed(2)),
+    };
+    }
+    else if(price>=2000 && price<3000){
+      const rate=8;
+      return {
+      rate,
+      amount: Number(((price * rate) / 100).toFixed(2)),
+    };
+    }
+    else if(price>=3000 && price<4000){
+      const rate=0.025;
+      return {
+      rate,
+      amount: Number(((price * rate)).toFixed(2)),
+    };
+    }
+    else if(price>=4000){
+      const rate=0.025;
+      return {
+      rate,
+      amount: Number(((price * rate)).toFixed(2)),
+    };
+    }
+    else{
+      const rate=15;
+      return {
+      rate,
+      amount: Number(((price * rate)/100).toFixed(2)),
+    };
+    }
+    // return {
+    //   rate,
+    //   amount: Number(((price * rate) / 100).toFixed(2)),
+    // };
+  }
+  else if(formData.category=="package-tour"){
+    if(price<5000){
+     const rate=22;
+      return {
+      rate,
+      amount: Number(((price * rate)/100).toFixed(2)),
+    }; 
+    }
+    else{
+      const rate=12;
+      return {
+      rate,
+      amount: Number(((price * rate)/100).toFixed(2)),
+    };
+    }
+  }
+  else if(formData.category==="vehicle-rent"){
+    const rate=8;
+      return {
+      rate,
+      amount: Number(((price * rate)/100).toFixed(2)),
+    };
+  }
+  else if(formData.category=="market-place"){
+    const rate=8;
+      return {
+      rate,
+      amount: Number(((price * rate)/100).toFixed(2)),
+    };
+  }
+  else{
+    const rate=12;
+    console.log(formData.category);
+      return {
+      rate,
+      amount: Number(((price * rate)/100).toFixed(2)),
+    };
+  }
+  }
+
+
+  if (type === "rent") {
+    // const rate = 10; 
+    if(price>=500 && price<2000){
+      const rate=12;
+      return {
+      rate,
+      amount: Number(((price * rate) / 100).toFixed(2)),
+    };
+    }
+    else if(price>=2000 && price<3000){
+      const rate=8;
+      return {
+      rate,
+      amount: Number(((price * rate) / 100).toFixed(2)),
+    };
+    }
+    else if(price>=3000 && price<4000){
+      const rate=0.025;
+      return {
+      rate,
+      amount: Number(((price * rate)).toFixed(2)),
+    };
+    }
+    else if(price>=4000){
+      const rate=0.025;
+      return {
+      rate,
+      amount: Number(((price * rate)).toFixed(2)),
+    };
+    }
+    else{
+      const rate=15;
+      return {
+      rate,
+      amount: Number(((price * rate)/100).toFixed(2)),
+    };
+    }
+    // return {
+    //   rate,
+    //   amount: Number(((price * rate) / 100).toFixed(2)),
+    // };
+  }
+  // rent
+  // const rate = 15; // 15%
+  // return {
+  //   rate,
+  //   amount: Number(((price * rate) / 100).toFixed(2)),
+  // };
+};
+
   const fetchCategories = async () => {
     setLoadingCategories(true);
     try {
@@ -105,32 +251,44 @@ export default function SellerAddProductPage() {
     }
   };
 
-  const uploadMedia = async (files: File[], folder: string) => {
-    if (!files.length) return [] as string[];
-    setUploadingState((prev) => ({ ...prev, [folder]: true }));
-    setUploadError(null);
+const uploadMedia = async (files: File[], folder: string) => {
+  if (!files.length) return [] as string[];
 
-    const form = new FormData();
-    files.forEach((file) => form.append("files", file));
-    form.append("folder", folder);
+  setUploadingState((prev) => ({ ...prev, [folder]: true }));
+  setUploadError(null);
+
+  const form = new FormData();
+  files.forEach((file) => form.append("files", file));
+  form.append("folder", folder);
+
+  try {
+    const res = await fetch("/api/uploads/products", {
+      method: "POST",
+      credentials: "include",
+      body: form,
+    });
+
+    let data: any = null;
 
     try {
-      const res = await fetch("/api/uploads/products", {
-        method: "POST",
-        credentials: "include",
-        body: form,
-      });
-      const data = await res.json();
-      if (!res.ok || !data.success) throw new Error(data?.message || "Upload failed");
-      const uploads = (data.uploads ?? []) as Array<{ url: string }>;
-      return uploads.map((u) => u.url);
-    } catch (err: unknown) {
-      setUploadError(err instanceof Error ? err.message : "Upload failed");
-      throw err;
-    } finally {
-      setUploadingState((prev) => ({ ...prev, [folder]: false }));
+      data = await res.json();
+    } catch {
+      throw new Error("Server returned an empty or invalid response");
     }
-  };
+
+    if (!res.ok || !data?.success) {
+      throw new Error(data?.message || "Upload failed");
+    }
+
+    return (data.uploads || []).map((u: { url: string }) => u.url);
+  } catch (err: any) {
+    setUploadError(err.message || "Upload failed");
+    throw err;
+  } finally {
+    setUploadingState((prev) => ({ ...prev, [folder]: false }));
+  }
+};
+
 
   const handleMainImages = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -253,12 +411,16 @@ export default function SellerAddProductPage() {
 
   const validate = () => {
     const errs: Record<string, string> = {};
+    if (!formData.name.trim()) errs.name = "Product name is required";
+    if (!formData.category) errs.category = "Category is required";
     if (!formData.description.trim()) errs.description = "Description is required";
     if (formData.listingType === "buy" && formData.basePrice <= 0) errs.basePrice = "Price must be greater than 0";
     if (formData.listingType === "rent" && formData.rentPriceDay <= 0) errs.rentPriceDay = "Rent price per day must be greater than 0";
     if (formData.images.length === 0) errs.images = "At least one image is required";
 
     const selectedCategory = categories.find((cat) => cat.slug === formData.category);
+  
+
     if (selectedCategory?.requiresVariants) {
       if (formData.variants.length === 0) {
         errs.variants = `At least one variant is required for ${selectedCategory.name}`;
@@ -276,14 +438,20 @@ export default function SellerAddProductPage() {
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
+    // const isProductManagement = "market-place";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Submit button clicked!");
+    console.log("Form data:", formData);
+    
     if (!validate()) {
+      console.log("Validation failed, errors:", errors);
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
+    console.log("Validation passed, submitting...");
     setSubmitting(true);
     try {
       const res = await fetch("/api/products", {
@@ -293,12 +461,14 @@ export default function SellerAddProductPage() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
+      console.log("API Response:", data);
       if (!res.ok || !data.success) {
         throw new Error(data?.message || "Failed to create product");
       }
       router.push("/vendor/properties/seller/products");
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Failed to save product";
+      console.error("Submit error:", error);
       alert(message);
     } finally {
       setSubmitting(false);
@@ -306,6 +476,8 @@ export default function SellerAddProductPage() {
   };
 
   const selectedCategory = categories.find((cat) => cat.slug === formData.category);
+  const isProductManagement = selectedCategory?.slug === "market-place";
+
   const needsVariants = selectedCategory?.requiresVariants || false;
   const fixedSizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
@@ -384,15 +556,28 @@ export default function SellerAddProductPage() {
                 ) : (
                   <select
                     value={formData.category}
-                    onChange={(e) => {
-                      const newCategory = categories.find((cat) => cat.slug === e.target.value);
-                      setFormData((prev) => ({
-                        ...prev,
-                        category: e.target.value,
-                        stock: newCategory?.requiresVariants ? 0 : prev.stock,
-                        variants: newCategory?.requiresVariants ? prev.variants : [],
-                      }));
-                    }}
+                   onChange={(e) => {
+  const newCategory = categories.find((cat) => cat.slug === e.target.value);
+
+  setFormData((prev) => ({
+    ...prev,
+    category: e.target.value,
+
+    // ✅ STEP 5 LOGIC (ADD THIS)
+    listingType:
+      newCategory?.slug === "product-management"
+        ? prev.listingType
+        : "buy",
+
+    rentPriceDay: 0,
+    commissionRate: 0,
+    commissionAmount: 0,
+
+    stock: newCategory?.requiresVariants ? 0 : prev.stock,
+    variants: newCategory?.requiresVariants ? prev.variants : [],
+  }));
+}}
+
                     className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
                   >
                     <option value="">Select a category</option>
@@ -410,7 +595,7 @@ export default function SellerAddProductPage() {
                 )}
               </div>
 
-              <div>
+               <div>
                 <label className="block text-sm font-medium text-gray-900 mb-1">
                   Description <span className="text-red-500">*</span>
                 </label>
@@ -428,7 +613,7 @@ export default function SellerAddProductPage() {
                 )}
               </div>
 
-              <div>
+              {/*<div>
                 <label className="block text-sm font-medium text-gray-900 mb-2">
                   Listing Type <span className="text-red-500">*</span>
                 </label>
@@ -456,9 +641,142 @@ export default function SellerAddProductPage() {
                     <span className="text-gray-900">For Rent</span>
                   </label>
                 </div>
-              </div>
+              </div> */}
+              <div className="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow space-y-4">
 
-              {formData.listingType === "buy" && (
+        {/* <h1 className="text-2xl font-semibold">Add Product</h1> */}
+
+        {/* LISTING TYPE */}
+    {isProductManagement && (
+  <div>
+    <label className="block text-sm font-medium mb-2">Listing Type</label>
+    <div className="flex gap-6">
+      <label className="flex items-center gap-2">
+        <input
+          type="radio"
+          checked={formData.listingType === "buy"}
+          onChange={() =>
+            setFormData((p) => ({
+              ...p,
+              listingType: "buy",
+              rentPriceDay: 0,
+              commissionRate: 0,
+              commissionAmount: 0,
+            }))
+          }
+        />
+        Buy
+      </label>
+
+      <label className="flex items-center gap-2">
+        <input
+          type="radio"
+          checked={formData.listingType === "rent"}
+          onChange={() =>
+            setFormData((p) => ({
+              ...p,
+              listingType: "rent",
+              basePrice: 0,
+              commissionRate: 0,
+              commissionAmount: 0,
+            }))
+          }
+        />
+        Rent
+      </label>
+    </div>
+  </div>
+)}
+
+
+        {/* BUY PRICE */}
+        { formData.listingType === "buy" && (
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Sale Price (₹)</label>
+            <input
+              type="number"
+              value={formData.basePrice}
+              onChange={(e) => {
+                const price = Number(e.target.value) || 0;
+                const { rate, amount } = calculateCommission("buy", price);
+                setFormData((p) => ({
+                  ...p,
+                  basePrice: price,
+                  commissionRate: rate,
+                  commissionAmount: amount,
+                }));
+              }}
+              className="w-full border px-3 py-2 rounded"
+            />
+          </div>
+        )}
+
+        {/* RENT PRICE */}
+        { formData.listingType === "rent" && (
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Rent Price / Day (₹)</label>
+            <input
+              type="number"
+              value={formData.rentPriceDay}
+              onChange={(e) => {
+                const price = Number(e.target.value) || 0;
+                const { rate, amount } = calculateCommission("rent", price);
+                setFormData((p) => ({
+                  ...p,
+                  rentPriceDay: price,
+                  commissionRate: rate,
+                  commissionAmount: amount,
+                }));
+              }}
+              className="w-full border px-3 py-2 rounded"
+            />
+          </div>
+        )}
+
+        {/* COMMISSION */}
+        {(formData.basePrice > 0 || formData.rentPriceDay > 0) && (
+          <>
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Commission ({formData.commissionRate}%)
+            </label>
+            <input
+              disabled
+              value={`₹ ${formData.commissionAmount}`}
+              className="w-full border px-3 py-2 rounded bg-gray-100 cursor-not-allowed"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Commission is auto-calculated and cannot be edited
+            </p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Total Amount 
+            </label>
+            <input
+              disabled
+              value={`₹ ${formData.commissionAmount+formData.basePrice}`}
+              className="w-full border px-3 py-2 rounded bg-gray-100 cursor-not-allowed"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Total amount is auto-calculated and cannot be edited
+            </p>
+          </div>
+          </>
+        )}
+
+        {/* <button
+          type="submit"
+          className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold"
+        >
+          Create Product
+        </button> */}
+
+      </div>
+
+              {/* {formData.listingType === "buy" && (
                 <div>
                   <label className="block text-sm font-medium text-gray-900 mb-1">
                     Sale Price (₹) <span className="text-red-500">*</span>
@@ -505,8 +823,8 @@ export default function SellerAddProductPage() {
                   {errors.rentPriceDay && (
                     <p className="text-red-600 text-sm mt-1">{errors.rentPriceDay}</p>
                   )}
-                </div>
-              )}
+                </div> */}
+              {/* )} */}
               {!needsVariants && selectedCategory && (
                 <div>
                   <label className="block text-sm font-medium text-gray-900 mb-1">

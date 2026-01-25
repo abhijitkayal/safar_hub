@@ -71,7 +71,7 @@ export default function CheckoutPage() {
         if (itemType === "Product") {
           apiPath = `/api/products/${itemId}`;
         } else if (itemType === "Stay") {
-          apiPath = `/api/stays/${itemId}`;
+          apiPath = `/stays/${itemId}`;
         } else if (itemType === "Tour") {
           apiPath = `/api/tours/${itemId}`;
         } else if (itemType === "Adventure") {

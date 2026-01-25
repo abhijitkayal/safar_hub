@@ -30,13 +30,13 @@ export default async function dbConnect() {
 
   connectionPromise = mongoose
     .connect(MONGODB_URI, {
-      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+      serverSelectionTimeoutMS: 30000, // Increased timeout to 30s
       socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
       bufferCommands: false, // Disable command buffering
     })
-    .then(async () => {
+    .then(async (mongooseInstance) => {
       console.log("✅ MongoDB connected successfully");
-      console.log(`📊 Database: ${mongoose.connection.db?.databaseName}`);
+      console.log(`📊 Database: ${mongooseInstance.connection.db.databaseName}`);
       
       // Initialize collections on first connection
       if (!isInitialized) {
@@ -46,8 +46,23 @@ export default async function dbConnect() {
       }
     })
     .catch((error) => {
-      console.error("❌ MongoDB connection error:", error);
-      throw new Error("Failed to connect to MongoDB");
+      console.error("❌ MongoDB connection error:", error.message);
+      console.error("Error details:", {
+        name: error.name,
+        code: error.code,
+        codeName: error.codeName,
+      });
+      
+      // Provide helpful error messages
+      if (error.message.includes("authentication failed")) {
+        console.error("💡 Check your MongoDB username and password in .env.local");
+      } else if (error.message.includes("ENOTFOUND") || error.message.includes("getaddrinfo")) {
+        console.error("💡 Check your internet connection and MongoDB cluster URL");
+      } else if (error.message.includes("IP") || error.message.includes("whitelist")) {
+        console.error("💡 Add your IP address to MongoDB Atlas Network Access whitelist");
+      }
+      
+      throw error; // Throw the original error with details
     })
     .finally(() => {
       connectionPromise = null;

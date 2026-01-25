@@ -207,7 +207,7 @@ export default function VendorToursPage() {
           {/* Actions */}
           <div className="mt-4 flex gap-2">
             <button
-              onClick={() => navigate ? navigate(`/tours/${tour._id}`) : router.push(`/tours/${tour._id}`)}
+              onClick={() => navigate ? navigate(`/tours/details/${tour._id}`) : router.push(`/tours/details/${tour._id}`)}
               className="flex-1 rounded-lg bg-blue-500 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-600"
             >
               <FaEye className="mr-1 inline" />

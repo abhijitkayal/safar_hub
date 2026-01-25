@@ -40,10 +40,10 @@ const services = [
     iconBg: "bg-emerald-100 text-emerald-600",
     icon: <FaBed className="text-2xl" />,
     subServices: [
-      { label: "Rooms", href: "/stays?category=rooms", icon: <FaDoorOpen /> },
-      { label: "Homestays", href: "/stays?category=homestays", icon: <FaHome /> },
-      { label: "BnBs", href: "/stays?category=bnbs", icon: <FaCoffee /> },
-      { label: "Hotels", href: "/stays?category=hotels", icon: <FaHotel /> },
+      { label: "Rooms", href: "/stays/rooms", icon: <FaDoorOpen /> },
+      { label: "Homestays", href: "/stays/homestays", icon: <FaHome /> },
+      { label: "BnBs", href: "/stays/bnbs", icon: <FaCoffee /> },
+      { label: "Hotel", href: "/stays/hotels", icon: <FaHotel /> },
     ],
   },
   {
@@ -55,8 +55,8 @@ const services = [
     iconBg: "bg-sky-100 text-sky-600",
     icon: <FaCompass className="text-2xl" />,
     subServices: [
-      { label: "Group Tours", href: "/tours?category=group-tours", icon: <FaUsers /> },
-      { label: "Tour Packages", href: "/tours?category=tour-packages", icon: <FaSuitcaseRolling /> },
+      { label: "Group Tours", href: "/tours/group-tours", icon: <FaUsers /> },
+      { label: "Tour Packages", href: "/tours/tour-packages", icon: <FaSuitcaseRolling /> },
     ],
   },
   {

@@ -1,8 +1,11 @@
+//tours/details/[id]/page.tsx
 import { notFound } from "next/navigation";
 import Tour from "@/models/Tour";
 import dbConnect from "@/lib/config/database";
-import TourBookingFormClient from "../../TourBookingFormClient";
-import type { TourDetailPayload } from "../../tourDetailClient";
+import TourDetailClient, { type TourDetailPayload } from "../../tourDetailClient";
+
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
 
 async function fetchTour(id: string): Promise<TourDetailPayload | null> {
   await dbConnect();
@@ -13,16 +16,12 @@ async function fetchTour(id: string): Promise<TourDetailPayload | null> {
 
 interface PageParams {
   params: Promise<{ id: string }>;
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-export default async function TourBookingPage({ params, searchParams }: PageParams) {
+export default async function TourDetailPage({ params }: PageParams) {
   const { id } = await params;
-  const query = await searchParams;
   const tour = await fetchTour(id);
-
   if (!tour) notFound();
 
-  return <TourBookingFormClient tour={tour} searchParams={query} />;
+  return <TourDetailClient tour={tour} />;
 }
-

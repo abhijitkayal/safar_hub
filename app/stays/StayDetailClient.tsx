@@ -323,7 +323,7 @@ const StayDetailClient: React.FC<StayDetailClientProps> = ({ stay }) => {
       infants: String(infants),
       bnb: "1",
     });
-    router.push(`/stays/${stay._id}/book?${params.toString()}`);
+    router.push(`/stays/details/${stay._id}/book?${params.toString()}`);
   };
 
   const handleBookNow = () => {
@@ -346,7 +346,7 @@ const StayDetailClient: React.FC<StayDetailClientProps> = ({ stay }) => {
       params.append("rooms", `${roomKey}:${quantity}`);
     });
 
-    router.push(`/stays/${stay._id}/book?${params.toString()}`);
+    router.push(`/stays/details/${stay._id}/book?${params.toString()}`);
   };
 
   const locationString = useMemo(

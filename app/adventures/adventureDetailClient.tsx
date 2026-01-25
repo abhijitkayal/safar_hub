@@ -444,7 +444,7 @@ const AdventureDetailClient: React.FC<AdventureDetailClientProps> = ({ adventure
       params.append("options", `${key}:${qty}`);
     });
 
-    router.push(`/adventures/${adventure._id}/book?${params.toString()}`);
+    router.push(`/adventures/details/${adventure._id}/book?${params.toString()}`);
   };
 
   const facilities = adventure.popularFacilities || [];

@@ -221,7 +221,7 @@ export default function VendorAdventuresPage() {
           {/* Actions */}
           <div className="mt-4 flex gap-2">
             <button
-              onClick={() => navigate ? navigate(`/adventures/${adv._id}`) : router.push(`/adventures/${adv._id}`)}
+              onClick={() => navigate ? navigate(`/adventures/details/${adv._id}`) : router.push(`/adventures/details/${adv._id}`)}
               className="flex-1 rounded-lg bg-blue-500 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-600 flex items-center justify-center gap-1"
             >
               <FaEye className="text-xs" />

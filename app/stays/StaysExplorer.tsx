@@ -144,7 +144,7 @@ export const StayCard = ({
 
   return (
     <Link
-      href={`/stays/${stay._id}`}
+      href={`/stays/details/${stay._id}`}
       className="group flex flex-col overflow-hidden rounded-3xl border border-white/40 bg-white/95 shadow-xl backdrop-blur-sm transition hover:-translate-y-2 hover:shadow-2xl"
     >
       <div className="relative h-56 w-full">
@@ -388,11 +388,10 @@ export default function StaysExplorer({ initialCategory = "all" }: StaysExplorer
       setLoading(true);
       setError(null);
       try {
-        const url = new URL("/api/stays", window.location.origin);
-        const categoryParam = normalizedInitialCategory !== "all" ? normalizedInitialCategory : undefined;
+        const category = normalizedInitialCategory || "all";
+        const url = new URL(`/stays/${category}`, window.location.origin);
         const cityParam = params.get("city") || undefined;
         const guestsParam = params.get("guests") || undefined;
-        if (categoryParam) url.searchParams.set("category", categoryParam);
         if (cityParam) url.searchParams.set("city", cityParam);
         if (guestsParam) url.searchParams.set("guests", guestsParam);
         const res = await fetch(url.toString(), { cache: "no-store" });
@@ -530,13 +529,10 @@ export default function StaysExplorer({ initialCategory = "all" }: StaysExplorer
     (value: CategoryValue) => {
       setActiveCategory(value);
       const nextSearch = new URLSearchParams(params.toString());
-      if (value === "all") {
-        nextSearch.delete("category");
-      } else {
-        nextSearch.set("category", value);
-      }
+      nextSearch.delete("category");
       const queryString = nextSearch.toString();
-      router.replace(queryString ? `/stays?${queryString}` : "/stays", { scroll: false });
+      const basePath = `/stays/${value}`;
+      router.replace(queryString ? `${basePath}?${queryString}` : basePath, { scroll: false });
     },
     [params, router]
   );
@@ -652,15 +648,14 @@ export default function StaysExplorer({ initialCategory = "all" }: StaysExplorer
                 className="rounded-lg bg-green-600 px-5 py-2 text-sm font-semibold text-white hover:bg-green-700"
                 type="button"
                 onClick={() => {
-                  const url = new URL("/stays", window.location.origin);
-                  if (searchTerm) url.searchParams.set("city", searchTerm);
-                  if (guests) url.searchParams.set("guests", String(guests));
-                  if (checkIn) url.searchParams.set("checkIn", checkIn);
-                  if (checkOut) url.searchParams.set("checkOut", checkOut);
-                  if (activeCategory && activeCategory !== "all") {
-                    url.searchParams.set("category", activeCategory);
-                  }
-                  router.push(`${url.pathname}?${url.searchParams.toString()}`);
+                  const basePath = `/stays/${activeCategory}`;
+                  const searchParams = new URLSearchParams();
+                  if (searchTerm) searchParams.set("city", searchTerm);
+                  if (guests) searchParams.set("guests", String(guests));
+                  if (checkIn) searchParams.set("checkIn", checkIn);
+                  if (checkOut) searchParams.set("checkOut", checkOut);
+                  const queryString = searchParams.toString();
+                  router.push(queryString ? `${basePath}?${queryString}` : basePath);
                 }}
               >
                 Search

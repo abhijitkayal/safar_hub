@@ -154,7 +154,7 @@ export default function AdminToursPage() {
                           </td>
                           <td className="px-4 py-4 text-right">
                             <Link
-                              href={`/tours/${tour._id}`}
+                              href={`/tours/details/${tour._id}`}
                               className="inline-flex items-center gap-2 rounded-full bg-blue-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-600"
                             >
                               <FaEye /> View
@@ -215,7 +215,7 @@ export default function AdminToursPage() {
 
                       <div className="mt-3 text-right">
                         <Link
-                          href={`/tours/${tour._id}`}
+                            href={`/tours/details/${tour._id}`}
                           className="inline-flex items-center gap-2 rounded-full bg-blue-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-600"
                         >
                           <FaEye /> View details

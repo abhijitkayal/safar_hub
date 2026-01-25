@@ -1,8 +1,8 @@
-//stays/[id]/page.tsx
+//stays/details/[id]/page.tsx
 import { notFound } from "next/navigation";
 import Stay from "@/models/Stay";
 import dbConnect from "@/lib/config/database";
-import StayDetailClient, { type StayDetailPayload } from "../StayDetailClient";
+import StayDetailClient, { type StayDetailPayload } from "../../StayDetailClient";
 
 async function fetchStay(id: string): Promise<StayDetailPayload | null> {
   await dbConnect();

@@ -46,7 +46,7 @@ const productSchema = new Schema<IProduct>(
     name: { type: String, required: true },
     category: {
       type: String,
-      required: true,
+      // required: true,
       index: true,
     },
     description: { type: String, required: true },

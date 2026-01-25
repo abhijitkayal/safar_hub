@@ -45,6 +45,16 @@ export default function VendorCategoriesPage() {
     }
   };
 
+  const PRESET_CATEGORIES = [
+  { label: "Home Stays", slug: "home-stays" },
+  { label: "BNB", slug: "bnb" },
+  { label: "Resorts", slug: "resorts" },
+  { label: "Hotels", slug: "hotels" },
+  { label: "Vehicle Rent", slug: "vehicle-rental" },
+  { label: "Market Place", slug: "market-place" },
+  { label: "Package Tour", slug: "package-tour" },
+];
+
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this category?")) return;
 
@@ -276,7 +286,18 @@ export default function VendorCategoriesPage() {
                   e.preventDefault();
                   const form = e.target as HTMLFormElement;
                   const formData = new FormData(form);
-                  const name = formData.get("name") as string;
+                  const presetSlug = formData.get("preset") as string;
+
+const preset = PRESET_CATEGORIES.find((c) => c.slug === presetSlug);
+
+if (!preset) {
+  alert("Please select a valid category");
+  return;
+}
+
+const name = preset.label;
+const slug = preset.slug;
+
                   const requiresVariants = formData.get("requiresVariants") === "on";
                   const displayOrder = parseInt(formData.get("displayOrder") as string) || 0;
 
@@ -313,14 +334,21 @@ export default function VendorCategoriesPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Category Name
                     </label>
-                    <input
-                      type="text"
-                      name="name"
-                      defaultValue={editingCategory?.name || ""}
-                      required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="Enter category name"
-                    />
+                    <select
+  name="preset"
+  defaultValue={editingCategory?.slug || ""}
+  required
+  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+>
+  <option value="">Select Category</option>
+
+  {PRESET_CATEGORIES.map((cat) => (
+    <option key={cat.slug} value={cat.slug}>
+      {cat.label}
+    </option>
+  ))}
+</select>
+
                   </div>
 
                   <div>

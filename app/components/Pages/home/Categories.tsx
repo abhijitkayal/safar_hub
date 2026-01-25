@@ -26,12 +26,12 @@ type CategoryCard = {
   href: string;
 };
 const tours: CategoryCard[] = [
-  { title: "Rooms", icon: FaDoorOpen, href: "/stays?category=rooms" },
-  { title: "Homestays", icon: FaHome, href: "/stays?category=homestays" },
-  { title: "BnBs", icon: FaCoffee, href: "/stays?category=bnbs" },
-  { title: "Hotels", icon: FaHotel, href: "/stays?category=hotels" },
-  { title: "Group Tours", icon: FaUsers, href: "/tours?category=group-tours" },
-  { title: "Tour Packages", icon: FaSuitcaseRolling, href: "/tours?category=tour-packages" },
+  { title: "Rooms", icon: FaDoorOpen, href: "/stays/rooms" },
+  { title: "Homestays", icon: FaHome, href: "/stays/homestays" },
+  { title: "BnBs", icon: FaCoffee, href: "/stays/bnbs" },
+  { title: "Hotels", icon: FaHotel, href: "/stays/hotels" },
+  { title: "Group Tours", icon: FaUsers, href: "/tours/group-tours" },
+  { title: "Tour Packages", icon: FaSuitcaseRolling, href: "/tours/tour-packages" },
 ];const tour2s: CategoryCard[] = [
   { title: "Trekking", icon: FaRoute, href: "/adventures?category=trekking" },
   { title: "Hiking", icon: FaHiking, href: "/adventures?category=hiking" },

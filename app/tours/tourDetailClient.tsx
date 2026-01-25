@@ -363,7 +363,7 @@ const TourDetailClient: React.FC<TourDetailClientProps> = ({ tour }) => {
       params.append("options", `${key}:${quantity}`);
     });
 
-    router.push(`/tours/${tour._id}/book?${params.toString()}`);
+    router.push(`/tours/details/${tour._id}/book?${params.toString()}`);
   };
 
   const locationString = useMemo(

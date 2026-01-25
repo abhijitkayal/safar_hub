@@ -93,7 +93,7 @@ export const POST = auth(async (req: NextRequest, context: any) => {
 
     const { name, category, description, basePrice, images, variants, tags, stock, listingType, rentPriceDay } = body;
 
-    if (!name || !category || !description || basePrice === undefined || !listingType) {
+    if (!name|| !description || basePrice === undefined || !listingType) {
       return NextResponse.json(
         { success: false, message: "Missing required fields" },
         { status: 400 }

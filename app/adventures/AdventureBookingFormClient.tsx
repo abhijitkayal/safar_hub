@@ -302,7 +302,7 @@ const AdventureBookingFormClient: React.FC<AdventureBookingFormProps> = ({ adven
             </p>
             <button
               type="button"
-              onClick={() => router.push(`/adventures/${adventure._id}`)}
+              onClick={() => router.push(`/adventures/details/${adventure._id}`)}
               className="mt-6 inline-flex items-center gap-2 rounded-full bg-green-600 px-5 py-3 text-sm font-semibold text-white shadow hover:bg-green-700"
             >
               <FaArrowLeft /> Back to adventure

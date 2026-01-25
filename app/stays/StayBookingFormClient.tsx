@@ -392,7 +392,7 @@ const StayBookingFormClient: React.FC<StayBookingFormProps> = ({ stay, searchPar
             </p>
             <button
               type="button"
-              onClick={() => router.push(`/stays/${stay._id}`)}
+              onClick={() => router.push(`/stays/details/${stay._id}`)}
               className="mt-6 inline-flex items-center gap-2 rounded-full bg-green-600 px-5 py-3 text-sm font-semibold text-white shadow hover:bg-green-700"
             >
               <FaArrowLeft /> Back to stay

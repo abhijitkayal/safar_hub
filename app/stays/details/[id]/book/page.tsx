@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import Stay from "@/models/Stay";
 import dbConnect from "@/lib/config/database";
-import StayBookingFormClient from "../../StayBookingFormClient";
-import type { StayDetailPayload } from "../../StayDetailClient";
+import StayBookingFormClient from "../../../StayBookingFormClient";
+import type { StayDetailPayload } from "../../../StayDetailClient";
 
 async function fetchStay(id: string): Promise<StayDetailPayload | null> {
   await dbConnect();
@@ -25,4 +25,3 @@ export default async function StayBookingPage({ params, searchParams }: PagePara
 
   return <StayBookingFormClient stay={stay} searchParams={query} />;
 }
-

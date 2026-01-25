@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import Adventure from "@/models/Adventure";
 import dbConnect from "@/lib/config/database";
-import AdventureBookingFormClient from "../../AdventureBookingFormClient";
-import type { AdventureDetailPayload } from "../../adventureDetailClient";
+import AdventureBookingFormClient from "../../../AdventureBookingFormClient";
+import type { AdventureDetailPayload } from "../../../adventureDetailClient";
 
 async function fetchAdventure(id: string): Promise<AdventureDetailPayload | null> {
   await dbConnect();
@@ -25,4 +25,3 @@ export default async function AdventureBookingPage({ params, searchParams }: Pag
 
   return <AdventureBookingFormClient adventure={adventure} searchParams={query} />;
 }
-

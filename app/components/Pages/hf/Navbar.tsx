@@ -149,10 +149,10 @@ const Navbar: React.FC = () => {
       href: "/stays",
       icon: <FaBed />,
       subServices: [
-        { name: "Rooms", href: "/stays?category=rooms", icon: <FaDoorOpen /> },
-        { name: "Homestays", href: "/stays?category=homestays", icon: <FaHome /> },
-        { name: "BnBs", href: "/stays?category=bnbs", icon: <FaCoffee /> },
-        { name: "Hotels", href: "/stays?category=hotels", icon: <FaHotel /> },
+        { name: "Rooms", href: "/stays/rooms", icon: <FaDoorOpen /> },
+        { name: "Homestays", href: "/stays/homestays", icon: <FaHome /> },
+        { name: "BnBs", href: "/stays/bnbs", icon: <FaCoffee /> },
+        { name: "Hotels", href: "/stays/hotels", icon: <FaHotel /> },
       ],
     },
     {
@@ -162,8 +162,8 @@ const Navbar: React.FC = () => {
       href: "/tours",
       icon: <FaCompass />,
       subServices: [
-        { name: "Group Tours", href: "/tours?category=group-tours", icon: <FaUsers /> },
-        { name: "Tour Packages", href: "/tours?category=tour-packages", icon: <FaSuitcaseRolling /> },
+        { name: "Group Tours", href: "/tours/group-tours", icon: <FaUsers /> },
+        { name: "Tour Packages", href: "/tours/tour-packages", icon: <FaSuitcaseRolling /> },
       ],
     },
     {
